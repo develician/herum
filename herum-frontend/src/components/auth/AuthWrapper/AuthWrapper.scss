@@ -1,0 +1,50 @@
+@import 'utils';
+
+.Positioner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+    .ShadowedBox {
+        
+        width: 500px;
+        @include media("<medium") {
+            width: calc(100vw - 1rem);
+        }
+        @include material-shadow(2, 0.5);
+        display: flex;
+        flex-direction: column;
+        background: white;
+       
+        .LogoWrapper {
+            background: $oc-teal-7;
+            height: 5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            @include media("<=small") {
+                display: none;
+            }
+            
+            .Logo {
+                color: white;
+                // font-family: 'Rajdhani';
+                font-size: 2.4rem;
+                letter-spacing: 5px;
+                text-decoration: none;
+
+                
+            }
+
+            .Contents {
+                background: white;
+                padding: 2rem;
+                height: auto;
+             }
+        }
+    }
+
+
+}

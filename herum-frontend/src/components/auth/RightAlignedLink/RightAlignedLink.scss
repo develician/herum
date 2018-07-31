@@ -1,0 +1,19 @@
+@import 'utils';
+
+.Aligner {
+    margin-top: 1rem;
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+    text-align: right;
+  
+    .StyledLink {
+        text-decoration: underline;
+        color: $oc-gray-6;
+        &:hover {
+            color: $oc-gray-7;
+        }
+        
+    }
+
+    
+}

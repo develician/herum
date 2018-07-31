@@ -1,0 +1,53 @@
+@import 'utils';
+
+
+.Positioner {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    @include material-shadow(1, 0.5);
+
+    
+    .WhiteBackground {
+        background: white;
+        display: flex;
+        justify-content: center;
+        height: auto;
+        
+
+        .HeaderContents {
+            width: 100%;
+            height: 3.5rem;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+    
+            padding-right: 1rem;
+            padding-left: 1rem;
+
+            position: relative;
+        
+    
+            
+            .Logo {
+                font-size: 1.4rem;
+                letter-spacing: 2px;
+                color: $oc-teal-7;
+                font-family: 'Rajdhani';
+            }
+    
+            .Spacer {
+                flex-grow: 1;
+            }
+        }
+    }
+
+    
+
+    .GradientBorder {
+        height: 3px;
+        background: linear-gradient(to right, $oc-teal-6, $oc-cyan-5);
+    }
+}

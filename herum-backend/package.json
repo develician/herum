@@ -1,0 +1,40 @@
+{
+  "name": "herum-backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/joi": "^13.4.0",
+    "@types/jsonwebtoken": "^7.2.8",
+    "@types/koa": "^2.0.46",
+    "@types/koa-bodyparser": "^5.0.1",
+    "@types/koa-mount": "^3.0.1",
+    "@types/koa-router": "^7.0.30",
+    "@types/koa-static": "^4.0.0",
+    "@types/mongoose": "^5.2.2",
+    "@types/node": "^10.5.3",
+    "tslint": "^5.11.0",
+    "tslint-config-airbnb": "^5.9.2",
+    "tslint-config-prettier": "^1.14.0",
+    "typescript": "^2.9.2"
+  },
+  "dependencies": {
+    "dotenv": "^6.0.0",
+    "joi": "^13.4.0",
+    "jsonwebtoken": "^8.3.0",
+    "koa": "^2.5.2",
+    "koa-body": "^4.0.4",
+    "koa-bodyparser": "^4.2.1",
+    "koa-mount": "^3.0.0",
+    "koa-router": "^7.4.0",
+    "koa-static": "^5.0.0",
+    "mongoose": "^5.2.5"
+  },
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "start": "cross-env NODE_PATH=src node src",
+    "start:dev": "cross-env NODE_PATH=dist nodemon --watch dist/ dist/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}

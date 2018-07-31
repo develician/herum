@@ -1,0 +1,18 @@
+@import 'utils';
+
+.Wrapper {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+
+    background: $oc-cyan-5;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    &:hover {
+        filter: brightness(105%);
+    }
+
+}
