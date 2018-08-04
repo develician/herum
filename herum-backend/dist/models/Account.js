@@ -9,58 +9,62 @@ var token_1 = require("lib/token");
 var hash = function (password) {
     if (process.env.SECRET_KEY !== undefined) {
         return crypto_1.default
-            .createHmac("sha256", process.env.SECRET_KEY)
+            .createHmac('sha256', process.env.SECRET_KEY)
             .update(password)
-            .digest("hex");
+            .digest('hex');
     }
-    return "";
+    return '';
 };
 exports.accountSchema = new mongoose_1.Schema({
     profile: {
         username: String,
         thumbnail: {
             type: String,
-            default: "/static/images/default_thumbnail.png"
-        }
+            default: '/static/images/default_thumbnail.png',
+        },
     },
     email: { type: String },
     social: {
         facebook: {
             id: String,
-            accessToken: String
+            accessToken: String,
         },
         google: {
             id: String,
-            accessToken: String
-        }
+            accessToken: String,
+        },
     },
     password: String,
     thoughtCount: {
         type: Number,
-        default: 0
+        default: 0,
     },
     createdAt: {
         type: Date,
-        default: new Date()
-    }
+        default: new Date(),
+    },
 });
 exports.accountSchema.methods.hash = function (password) {
     if (process.env.SECRET_KEY !== undefined) {
         return crypto_1.default
-            .createHmac("sha256", process.env.SECRET_KEY)
+            .createHmac('sha256', process.env.SECRET_KEY)
             .update(password)
-            .digest("hex");
+            .digest('hex');
     }
-    return "";
+    return '';
+};
+exports.accountSchema.methods.increaseThoughtCount = function () {
+    this.thoughtCount++;
+    return this.save();
 };
 exports.accountSchema.statics.localRegister = function (_a) {
     var username = _a.username, email = _a.email, password = _a.password;
     var account = new this({
         profile: {
-            username: username
+            username: username,
         },
         email: email,
-        password: hash(password)
+        password: hash(password),
     });
     return account.save();
 };
@@ -73,7 +77,7 @@ exports.accountSchema.statics.findByUsername = function (username) {
 exports.accountSchema.statics.findByEmailOrUsername = function (_a) {
     var username = _a.username, email = _a.email;
     return this.findOne({
-        $or: [{ "profile.username": username }, { email: email }]
+        $or: [{ 'profile.username': username }, { email: email }],
     }).exec();
 };
 exports.accountSchema.methods.validatePassword = function (password) {
@@ -83,9 +87,9 @@ exports.accountSchema.methods.validatePassword = function (password) {
 exports.accountSchema.methods.generateToken = function () {
     var payload = {
         _id: this._id,
-        profile: this.profile
+        profile: this.profile,
     };
-    return token_1.generateToken(payload, "account");
+    return token_1.generateToken(payload, 'account');
 };
-exports.Account = mongoose_1.model("Account", exports.accountSchema);
+exports.Account = mongoose_1.model('Account', exports.accountSchema);
 exports.default = exports.Account;

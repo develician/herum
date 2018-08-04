@@ -1,6 +1,6 @@
-import mongoose, { Schema, Document, Model, model } from "mongoose";
-import crypto from "crypto";
-import { generateToken } from "lib/token";
+import mongoose, { Schema, Document, Model, model } from 'mongoose';
+import crypto from 'crypto';
+import { generateToken } from 'lib/token';
 
 export interface AccountDocument extends Document {
   profile: {
@@ -27,6 +27,7 @@ export interface Account extends AccountDocument {
   hash(password: string): string;
   validatePassword(password: string): boolean;
   generateToken(): string;
+  increaseThoughtCount(): Account;
 }
 
 export interface AccountModel extends Model<Account> {
@@ -39,12 +40,12 @@ export interface AccountModel extends Model<Account> {
 const hash = (password: string): string => {
   if (process.env.SECRET_KEY !== undefined) {
     return crypto
-      .createHmac("sha256", process.env.SECRET_KEY)
+      .createHmac('sha256', process.env.SECRET_KEY)
       .update(password)
-      .digest("hex");
+      .digest('hex');
   }
 
-  return "";
+  return '';
 };
 
 export const accountSchema: Schema = new Schema({
@@ -52,48 +53,54 @@ export const accountSchema: Schema = new Schema({
     username: String,
     thumbnail: {
       type: String,
-      default: "/static/images/default_thumbnail.png"
-    }
+      default: '/static/images/default_thumbnail.png',
+    },
   },
   email: { type: String },
   social: {
     facebook: {
       id: String,
-      accessToken: String
+      accessToken: String,
     },
     google: {
       id: String,
-      accessToken: String
-    }
+      accessToken: String,
+    },
   },
   password: String,
   thoughtCount: {
     type: Number,
-    default: 0
+    default: 0,
   },
   createdAt: {
     type: Date,
-    default: new Date()
-  }
+    default: new Date(),
+  },
 });
 
 accountSchema.methods.hash = (password: string): string => {
   if (process.env.SECRET_KEY !== undefined) {
     return crypto
-      .createHmac("sha256", process.env.SECRET_KEY)
+      .createHmac('sha256', process.env.SECRET_KEY)
       .update(password)
-      .digest("hex");
+      .digest('hex');
   }
 
-  return "";
+  return '';
 };
+
+accountSchema.methods.increaseThoughtCount = function() {
+  this.thoughtCount++;
+  return this.save();
+};
+
 accountSchema.statics.localRegister = function({ username, email, password }) {
   const account = new this({
     profile: {
-      username
+      username,
     },
     email,
-    password: hash(password)
+    password: hash(password),
   });
 
   return account.save();
@@ -109,7 +116,7 @@ accountSchema.statics.findByUsername = function(username) {
 
 accountSchema.statics.findByEmailOrUsername = function({ username, email }) {
   return this.findOne({
-    $or: [{ "profile.username": username }, { email }]
+    $or: [{ 'profile.username': username }, { email }],
   }).exec();
 };
 
@@ -121,14 +128,14 @@ accountSchema.methods.validatePassword = function(password: string): boolean {
 accountSchema.methods.generateToken = function() {
   const payload = {
     _id: this._id,
-    profile: this.profile
+    profile: this.profile,
   };
 
-  return generateToken(payload, "account");
+  return generateToken(payload, 'account');
 };
 
 export const Account: AccountModel = model<Account, AccountModel>(
-  "Account",
+  'Account',
   accountSchema
 );
 export default Account;
