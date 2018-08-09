@@ -12,6 +12,9 @@ var mongoose_1 = __importDefault(require("mongoose"));
 var api_1 = __importDefault(require("./api"));
 var token_1 = require("lib/token");
 var _a = process.env, _b = _a.PORT, port = _b === void 0 ? 4000 : _b, mongoURI = _a.MONGO_URI;
+var serve = require('koa-static');
+var path = require('path');
+var fallback = require('koa-connect-history-api-fallback');
 mongoose_1.default.Promise = global.Promise;
 if (mongoURI !== undefined) {
     mongoose_1.default
@@ -31,6 +34,8 @@ app.use(token_1.jwtMiddleware);
 router.use('/api', api_1.default.routes());
 app.use(router.routes()).use(router.allowedMethods());
 app.ws.use(ws.routes()).use(ws.allowedMethods());
+app.use(fallback());
+app.use(serve(path.resolve(__dirname, '../../herum-frontend/build/')));
 app.listen(port, function () {
     console.log('app is using port', port);
 });

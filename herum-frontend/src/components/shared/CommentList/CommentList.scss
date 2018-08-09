@@ -1,0 +1,17 @@
+@import 'utils';
+
+.CommentListwrapper {
+    margin-top: 0.75rem;
+
+    .ReadMore {
+        color: $oc-gray-6;
+        font-size: 0.9rem;
+        text-align: center;
+        cursor: pointer;
+
+        &:hover {
+            color: $oc-cyan-6;
+            font-weight: 500;
+        }
+    }
+}

@@ -15,6 +15,14 @@ export const commentSchema: Schema = new Schema({
   text: String,
 });
 
+export interface Comment extends CommentDocument {}
+export interface CommentModel extends Model<Comment> {}
+
+const Comment: CommentModel = model<Comment, CommentModel>(
+  'Comment',
+  commentSchema
+);
+
 export interface PostDocument extends Document {
   createdAt: Date;
   count: number;
@@ -25,7 +33,9 @@ export interface PostDocument extends Document {
   comments: CommentDocument[];
 }
 
-export interface Post extends PostDocument {}
+export interface Post extends PostDocument {
+  writeComment({ username, text }): Comment;
+}
 
 export interface PostModel extends Model<Post> {
   write({ count, username, content }): Post;
@@ -55,6 +65,11 @@ export const postSchema: Schema = new Schema({
     default: [],
   },
 });
+
+postSchema.methods.writeComment = function({ username, text }): Comment {
+  this.comments.unshift({ username, text });
+  return this.save();
+};
 
 postSchema.statics.write = function({ count, username, content }) {
   const post = new this({

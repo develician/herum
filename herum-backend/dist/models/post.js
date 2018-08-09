@@ -9,6 +9,7 @@ exports.commentSchema = new mongoose_1.Schema({
     username: String,
     text: String,
 });
+var Comment = mongoose_1.model('Comment', exports.commentSchema);
 exports.postSchema = new mongoose_1.Schema({
     createdAt: {
         type: Date,
@@ -30,6 +31,11 @@ exports.postSchema = new mongoose_1.Schema({
         default: [],
     },
 });
+exports.postSchema.methods.writeComment = function (_a) {
+    var username = _a.username, text = _a.text;
+    this.comments.unshift({ username: username, text: text });
+    return this.save();
+};
 exports.postSchema.statics.write = function (_a) {
     var count = _a.count, username = _a.username, content = _a.content;
     var post = new this({

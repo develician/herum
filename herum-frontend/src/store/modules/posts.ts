@@ -7,6 +7,13 @@ export type Comment = {
   createdAt: Date;
   username: string;
   text: string;
+  _id: string;
+};
+
+export type commentsInstance = {
+  postId: string;
+  visible: boolean;
+  value: string;
 };
 
 export type Post = {
@@ -27,13 +34,26 @@ const SHOW_PREFETCHED_POST = 'posts/SHOW_PREFETCHED_POST';
 const RECEIVE_NEW_POST = 'posts/RECEIVE_NEW_POST';
 const LIKE_POST = 'posts/LIKE_POST'; // 포스트 좋아요
 const UNLIKE_POST = 'posts/UNLIKE_POST'; // 포스트 좋아요 취소
+const TOGGLE_COMMENT = 'posts/TOGGLE_COMMENT';
+const CHANGE_COMMENT_INPUT = 'posts/CHANGE_COMMENT_INPUT';
+const COMMENT = 'posts/COMMENT';
+const INITIALIZE_COMMENTS_STATE = 'posts/INITIALIZE_COMMENTS_STATE';
+
+type ChangeCommentInputPayload = { postId: string; value: string };
 
 export const postsActions = {
-  loadPost: createAction<{}>(LOAD_POST, PostsAPI.list),
+  loadPost: createAction(LOAD_POST, PostsAPI.list),
   prefetchPost: createAction(PREFETCH_POST, PostsAPI.next),
   showPrefetchedPost: createAction(SHOW_PREFETCHED_POST),
   likePost: createAction(LIKE_POST, PostsAPI.like, payload => payload),
   unlikePost: createAction(UNLIKE_POST, PostsAPI.unlike, payload => payload),
+  toggleComment: createAction<string, string>(TOGGLE_COMMENT, payload => payload),
+  changeCommentInput: createAction<ChangeCommentInputPayload, ChangeCommentInputPayload>(
+    CHANGE_COMMENT_INPUT,
+    (payload: ChangeCommentInputPayload) => payload
+  ),
+  comment: createAction(COMMENT, PostsAPI.comment, ({ postId }) => postId),
+  initializeCommentState: createAction(INITIALIZE_COMMENTS_STATE),
 };
 
 type LoadPostAction = {
@@ -60,25 +80,27 @@ type ReceiveNewPostAction = {
 
 type LikePostPendingAction = ReturnType<typeof postsActions.likePost>;
 type UnlikePostPendingAction = ReturnType<typeof postsActions.unlikePost>;
+type ToggleCommentAction = ReturnType<typeof postsActions.toggleComment>;
+type ChangeCommentInputAction = ReturnType<typeof postsActions.changeCommentInput>;
+type CommentAction = ReturnType<typeof postsActions.comment>;
 
-// type LikePostSuccessAction = {
-//   payload: {
-//     data: {
-//       liked: boolean;
-//     likesCount: number;
-//     }
-//   };
-// };
+export type VisibleComment = {
+  postId: string;
+  visible: boolean;
+  value: string;
+};
 
 export type PostsState = {
   next: string;
   data: Post[];
   nextData: Post[];
+  visibleComments: VisibleComment[];
 };
 const initialState: PostsState = {
   next: '',
   data: [],
   nextData: [],
+  visibleComments: [],
 };
 
 const reducer = handleActions<PostsState, any>(
@@ -168,6 +190,68 @@ const reducer = handleActions<PostsState, any>(
         });
       },
     }),
+    [TOGGLE_COMMENT]: (state: PostsState, action: ToggleCommentAction) => {
+      return produce(state, draft => {
+        if (!action.payload) {
+          return;
+        }
+        const postId = action.payload;
+        // draft.visibleCommentsId = [...draft.visibleCommentsId, postId];
+        const existing = state.visibleComments.find((comment, i) => {
+          return comment.postId === postId;
+        });
+        if (!existing) {
+          const newVisibleComment = {
+            postId,
+            visible: true,
+            value: '',
+          };
+          draft.visibleComments = [...draft.visibleComments, newVisibleComment];
+        } else {
+          const index = state.visibleComments.findIndex(comment => {
+            return comment.postId === postId;
+          });
+          draft.visibleComments[index].visible = !state.visibleComments[index].visible;
+        }
+      });
+    },
+    [CHANGE_COMMENT_INPUT]: (state: PostsState, action: ChangeCommentInputAction) => {
+      return produce(state, draft => {
+        if (!action.payload) {
+          return;
+        }
+        const { postId, value } = action.payload;
+        const index = state.visibleComments.findIndex(comment => {
+          return comment.postId === postId;
+        });
+        draft.visibleComments[index].value = value;
+      });
+    },
+    ...pender({
+      type: COMMENT,
+      onPending: (state: PostsState, action: CommentAction) => {
+        return produce(state, draft => {
+          const postId = action.meta;
+          const index = state.visibleComments.findIndex(comment => {
+            return comment.postId === postId;
+          });
+          draft.visibleComments[index].value = '';
+        });
+      },
+      onSuccess: (state: PostsState, action) => {
+        return produce(state, draft => {
+          const index = state.data.findIndex(post => {
+            return post._id === action.meta;
+          });
+          draft.data[index].comments = action.payload.data;
+        });
+      },
+    }),
+    [INITIALIZE_COMMENTS_STATE]: (state: PostsState, action) => {
+      return produce(state, draft => {
+        draft.visibleComments = [];
+      });
+    },
   },
   initialState
 );

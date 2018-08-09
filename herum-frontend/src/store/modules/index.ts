@@ -4,6 +4,7 @@ import auth, { AuthState } from './auth';
 import user, { UserState } from './user';
 import home, { HomeState } from './home';
 import posts, { PostsState } from './posts';
+import userPage, { UserPageState } from './userPage';
 import { penderReducer as pender } from 'redux-pender';
 
 export default combineReducers({
@@ -12,6 +13,7 @@ export default combineReducers({
   user,
   home,
   posts,
+  userPage,
   pender,
 });
 
@@ -21,6 +23,7 @@ export type State = {
   user: UserState;
   home: HomeState;
   posts: PostsState;
+  userPage: UserPageState;
   pender: {
     pending: any;
     success: any;

@@ -12,8 +12,12 @@ export default (function socketHelper() {
   let _store: any = null;
   let _socket: any = null;
   let _uri: any = null;
+  let _listen: boolean = true;
 
   const listener = message => {
+    if (!_listen) {
+      return;
+    }
     const data: any = parseJSON(message.data); // JSON 파싱
     if (!data || !data.type) return; // 파싱 실패했거나, type 값이 없으면 무시
     _store.dispatch(data); // 제대로 된 데이터면 store 에 디스패치
@@ -39,6 +43,12 @@ export default (function socketHelper() {
     initialize: (store, uri) => {
       _store = store;
       connect(uri);
+    },
+    listen: () => {
+      _listen = true;
+    },
+    ignore: () => {
+      _listen = false;
     },
   };
 })();

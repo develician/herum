@@ -16,6 +16,7 @@ export interface UserMenuContainerProps {
   UserActions: typeof userActions;
   username: string;
   visible: boolean;
+  history: any;
 }
 
 class UserMenuContainer extends React.Component<UserMenuContainerProps> {
@@ -37,6 +38,12 @@ class UserMenuContainer extends React.Component<UserMenuContainerProps> {
     window.location.href = '/';
   };
 
+  public handleOpenMyHerum = () => {
+    const { username, BaseActions } = this.props;
+    this.props.history.push(`/@${username}`);
+    BaseActions.setUserMenuVisibility(false);
+  };
+
   public render() {
     const { visible, username } = this.props;
     if (!visible) {
@@ -45,7 +52,7 @@ class UserMenuContainer extends React.Component<UserMenuContainerProps> {
     return (
       <UserMenu>
         <Username username={username} />
-        <UserMenuItem>나의 흐름</UserMenuItem>
+        <UserMenuItem onClick={this.handleOpenMyHerum}>나의 흐름</UserMenuItem>
         <UserMenuItem>설정</UserMenuItem>
         <UserMenuItem onClick={this.handleLogout}>로그아웃</UserMenuItem>
       </UserMenu>

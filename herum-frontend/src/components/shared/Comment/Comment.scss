@@ -1,0 +1,19 @@
+@import 'utils';
+
+.CommentWrapper {
+    font-size: 0.9rem;
+    & + & {
+        margin-top: 0.25rem;
+    }
+
+    .User {
+        font-weight: 500;
+        margin-right: 0.25rem;
+        color: $oc-gray-9;
+        text-decoration: none;
+    }
+
+    .Text {
+        color: $oc-gray-6;
+    }
+}

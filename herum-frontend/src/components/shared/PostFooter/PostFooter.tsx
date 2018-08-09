@@ -11,16 +11,23 @@ interface PostFooterProps {
   comments: any[];
   liked: boolean;
   onToggleLike(): any;
+  onCommentClick(): void;
 }
 
-const PostFooter: React.SFC<PostFooterProps> = ({ likesCount, comments, liked, onToggleLike }) => (
+const PostFooter: React.SFC<PostFooterProps> = ({
+  likesCount,
+  comments,
+  liked,
+  onToggleLike,
+  onCommentClick,
+}) => (
   <div className={cx('Wrapper')}>
     <div className={cx(liked ? 'LikedLikes' : 'Likes')}>
       <GoHeart onClick={onToggleLike} />
       <span>좋아요 {likesCount}개</span>
     </div>
     <div className={cx('Comments')}>
-      <IoIosChatbubbles />
+      <IoIosChatbubbles onClick={onCommentClick} />
       <span>덧글 {comments.length}개</span>
     </div>
   </div>

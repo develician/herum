@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import { Home } from 'pages';
+import { Home, User } from 'pages';
 import AuthContainer from 'containers/auth/AuthContainer';
 import BaseContainer from 'containers/base/BaseContainer';
 
@@ -13,6 +13,7 @@ const App: React.SFC<{}> = props => {
       <Switch>
         <Route exact={true} path="/" component={Home} />
         <Route path="/auth/:category" component={AuthContainer} />
+        <Route path="/@:username" component={User} />
       </Switch>
       <BaseContainer />
     </div>

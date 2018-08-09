@@ -1,10 +1,10 @@
 import * as React from 'react';
 import PostList from 'components/shared/PostList';
 import { connect } from 'react-redux';
-import { bindActionCreators, compose } from 'redux';
+import { bindActionCreators } from 'redux';
 import { postsActions, Post } from 'store/modules/posts';
 import { State } from 'store/modules';
-import { withRouter } from 'react-router-dom';
+// import { withRouter } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 export interface PostListContainerProps {
@@ -15,13 +15,18 @@ export interface PostListContainerProps {
   logged: boolean;
 }
 
-class PostListContainer extends React.Component<PostListContainerProps> {
+export interface OwnProps {
+  username?: string;
+}
+
+class PostListContainer extends React.Component<PostListContainerProps & OwnProps> {
   public prev;
   public load = async () => {
-    const { PostsActions } = this.props;
+    const { PostsActions, username } = this.props;
 
     try {
-      await PostsActions.loadPost();
+      await (PostsActions as any).loadPost(username);
+
       const { next } = this.props;
 
       if (next) {
@@ -70,10 +75,18 @@ class PostListContainer extends React.Component<PostListContainerProps> {
   public componentDidMount() {
     this.load();
     window.addEventListener('scroll', this.handleScroll);
+    this.props.PostsActions.initializeCommentState();
   }
   public componentWillUnmount() {
     // 컴포넌트가 언마운트 될 때에는 스크롤 이벤트리스너를 제거합니다
     window.removeEventListener('scroll', this.handleScroll);
+  }
+
+  public componentDidUpdate(prevProps: OwnProps, prevState) {
+    if (prevProps.username !== this.props.username) {
+      this.load();
+      this.props.PostsActions.initializeCommentState();
+    }
   }
 
   public handleToggleLike = ({ postId, liked }): any => {
@@ -89,24 +102,53 @@ class PostListContainer extends React.Component<PostListContainerProps> {
     }
   };
 
+  public handleCommentClick = postId => {
+    const { PostsActions } = this.props;
+
+    PostsActions.toggleComment(postId);
+    setTimeout(() => (this as any).masonry.masonry.layout(), 0);
+  };
+
+  public handleRelayout = () => {
+    setTimeout(() => (this as any).masonry.masonry.layout(), 0);
+  };
+
   public render() {
-    return <PostList posts={this.props.data} onToggleLike={this.handleToggleLike} />;
+    return (
+      <PostList
+        posts={this.props.data}
+        onToggleLike={this.handleToggleLike}
+        onCommentClick={this.handleCommentClick}
+        masonryRef={ref => ((this as any).masonry = ref)}
+        onRelayout={this.handleRelayout}
+      />
+    );
   }
 }
 
-// export default PostListContainer;
-
-export default compose(
-  withRouter,
-  connect(
-    ({ posts, user }: State) => ({
-      next: posts.next,
-      data: posts.data,
-      nextData: posts.nextData,
-      logged: user.logged,
-    }),
-    dispatch => ({
-      PostsActions: bindActionCreators(postsActions, dispatch),
-    })
-  )
+export default connect(
+  ({ posts, user }: State) => ({
+    next: posts.next,
+    data: posts.data,
+    nextData: posts.nextData,
+    logged: user.logged,
+  }),
+  dispatch => ({
+    PostsActions: bindActionCreators(postsActions, dispatch),
+  })
 )(PostListContainer);
+
+// export default compose(
+//   withRouter,
+//   connect(
+//     ({ posts, user }: State) => ({
+//       next: posts.next,
+//       data: posts.data,
+//       nextData: posts.nextData,
+//       logged: user.logged,
+//     }),
+//     dispatch => ({
+//       PostsActions: bindActionCreators(postsActions, dispatch),
+//     })
+//   )
+// )(PostListContainer);
