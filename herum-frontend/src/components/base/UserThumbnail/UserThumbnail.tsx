@@ -5,11 +5,12 @@ import * as classNames from 'classnames/bind';
 const cx = classNames.bind(styles);
 
 interface UserThumbnailProps {
-  thumbnail: string;
-  onClick(): void;
+  thumbnail?: string;
+  image?: string;
+  onClick?(): void;
 }
 
-const UserThumbnail: React.SFC<UserThumbnailProps> = ({ thumbnail, onClick }) => (
+const UserThumbnail: React.SFC<UserThumbnailProps> = ({ thumbnail, onClick, image }) => (
   <div
     className={cx('Wrapper')}
     style={{ backgroundImage: `url(${thumbnail})` }}

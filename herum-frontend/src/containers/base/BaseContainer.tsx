@@ -5,6 +5,8 @@ import { userActions } from 'store/modules/user';
 import { State } from 'store/modules';
 import { withRouter } from 'react-router-dom';
 import storage from 'lib/storage';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css';
 
 export interface BaseContainerProps {
   UserActions: typeof userActions;
@@ -32,7 +34,7 @@ class BaseContainer extends React.Component<BaseContainerProps> {
     this.initializeUserInfo();
   }
   public render() {
-    return <div />;
+    return <ToastContainer style={{ zIndex: 20 }} hideProgressBar={true} position="bottom-right" />;
   }
 }
 

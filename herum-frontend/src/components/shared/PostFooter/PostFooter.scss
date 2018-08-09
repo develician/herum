@@ -1,0 +1,57 @@
+@import 'utils';
+
+.Wrapper {
+    padding: 1rem;
+    border-top: 1px solid $oc-gray-1;
+    display: flex;
+    color: $oc-gray-5;
+    svg {
+        font-size: 1.75rem;
+        cursor: pointer;
+    }
+    span {
+        margin-left: 0.25rem;
+        font-size: 0.8rem;
+        padding-bottom: 0.25rem;
+    }
+
+    .Likes {
+        display: flex;
+        align-items: center;
+        svg {
+            &:hover {
+                color: $oc-gray-6;
+            }
+            &:active {
+                color: $oc-pink-6;
+            }
+        }
+    }
+
+    .LikedLikes {
+        display: flex;
+        align-items: center;
+        svg {
+            
+            color: $oc-pink-6;
+            
+            &:hover {
+                color: $oc-pink-5;
+            }
+        }
+    }
+
+    .Comments {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        svg {
+            &:hover {
+                color: $oc-gray-6;
+            }
+            &:active {
+                color: $oc-cyan-6;
+            }
+        }
+    }
+}

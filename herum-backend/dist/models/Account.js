@@ -72,7 +72,7 @@ exports.accountSchema.statics.findByEmail = function (email) {
     return this.findOne({ email: email }).exec();
 };
 exports.accountSchema.statics.findByUsername = function (username) {
-    return this.findOne({ username: username }).exec();
+    return this.findOne({ 'profile.username': username }).exec();
 };
 exports.accountSchema.statics.findByEmailOrUsername = function (_a) {
     var username = _a.username, email = _a.email;

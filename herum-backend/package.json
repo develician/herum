@@ -13,6 +13,7 @@
     "@types/koa-static": "^4.0.0",
     "@types/mongoose": "^5.2.2",
     "@types/node": "^10.5.3",
+    "@types/redis": "^2.8.6",
     "tslint": "^5.11.0",
     "tslint-config-airbnb": "^5.9.2",
     "tslint-config-prettier": "^1.14.0",
@@ -28,7 +29,9 @@
     "koa-mount": "^3.0.0",
     "koa-router": "^7.4.0",
     "koa-static": "^5.0.0",
-    "mongoose": "^5.2.5"
+    "koa-websocket": "^5.0.1",
+    "mongoose": "^5.2.5",
+    "redis": "^2.8.0"
   },
   "scripts": {
     "build": "tsc",

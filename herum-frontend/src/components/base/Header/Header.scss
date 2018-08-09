@@ -8,6 +8,7 @@
     top: 0px;
     width: 100%;
     @include material-shadow(1, 0.5);
+    z-index: 20;
 
     
     .WhiteBackground {

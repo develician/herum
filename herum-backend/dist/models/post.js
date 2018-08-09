@@ -41,11 +41,38 @@ exports.postSchema.statics.write = function (_a) {
 };
 exports.postSchema.statics.list = function (_a) {
     var cursor = _a.cursor, username = _a.username, self = _a.self;
-    var query = {};
-    return this.find(query)
+    var query = Object.assign({}, cursor ? { _id: { $lt: cursor } } : {}, username ? { username: username } : {});
+    var projection = self
+        ? {
+            count: 1,
+            username: 1,
+            content: 1,
+            comments: 1,
+            likes: {
+                $elemMatch: { $eq: self },
+            },
+            likesCount: 1,
+            createdAt: 1,
+        }
+        : {};
+    return this.find(query, projection)
         .sort({ _id: -1 }) // _id 역순
         .limit(20) // 20개로 제한
         .exec();
+};
+exports.postSchema.statics.like = function (_a) {
+    var _id = _a._id, username = _a.username;
+    return this.findByIdAndUpdate(_id, {
+        $inc: { likesCount: 1 },
+        $push: { likes: username },
+    }, { new: true, select: 'likesCount' }).exec();
+};
+exports.postSchema.statics.unlike = function (_a) {
+    var _id = _a._id, username = _a.username;
+    return this.findByIdAndUpdate(_id, {
+        $inc: { likesCount: -1 },
+        $pull: { likes: username },
+    }, { new: true, select: 'likesCount' }).exec();
 };
 exports.Post = mongoose_1.model('Post', exports.postSchema);
 exports.default = exports.Post;

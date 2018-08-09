@@ -1,0 +1,37 @@
+
+@import 'utils';
+
+.Wrapper {
+    width: 768px;
+    margin: 0 auto;
+    padding: 1rem;
+    background: $oc-gray-7;
+    position: relative;
+    @include material-shadow(2, 0.5);
+    @include media("<large") {
+        width: 736px;
+    }
+    @include media("<medium") {
+        width: 100%;
+    }
+    
+    .StyledTextArea {
+        width: 100%;
+        background: transparent;
+        border: none;
+        resize: none;
+        outline: none;
+        font-size: 1.5rem;
+        font-weight: 300;
+        color: white;
+
+        @include media("<medium") {
+            font-size: 1rem;
+        }
+        
+    } 
+
+    .StyledTextArea::placeholder {
+        color: $oc-gray-3;
+    }
+}

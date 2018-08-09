@@ -1,0 +1,62 @@
+@import 'utils';
+
+.Wrapper {
+    width: calc((100% - 32px) / 3);
+    @include media('<large') {
+        width: calc((100% - 16px) / 2);
+    }
+    @include media('<medium') {
+        width: 100%;
+    }
+
+    margin-bottom: 1rem;
+    background: white;
+    @include material-shadow(1, 0.5);
+
+    .PostHead {
+        padding: 1rem;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        border-bottom: 1px solid $oc-gray-2;
+        .UserThumbnail{
+            background: $oc-gray-2;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+        }
+
+        .Username {
+            font-weight: 500;
+            margin-left: 0.3rem;
+            font-size: 0.9rem;
+        }
+
+        .Count {
+            color: $oc-gray-6;
+            margin-left: 0.3rem;
+            font-size: 0.8rem;
+        }
+
+        .Time {
+            color: $oc-gray-4;
+            font-size: 0.8rem;
+            margin-left: auto;
+
+        }
+
+       
+    }
+
+    .Content {
+        font-size: 1.25rem;
+        color: $oc-gray-8;
+        font-weight:300;
+        padding: 1rem;
+        word-break: break-all;
+        white-space: pre-wrap;
+    }
+}

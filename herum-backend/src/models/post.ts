@@ -30,6 +30,8 @@ export interface Post extends PostDocument {}
 export interface PostModel extends Model<Post> {
   write({ count, username, content }): Post;
   list({ cursor, username, self }): Post[];
+  like({ _id, username }): Post;
+  unlike({ _id, username }): Post;
 }
 
 export const postSchema: Schema = new Schema({
@@ -65,12 +67,52 @@ postSchema.statics.write = function({ count, username, content }) {
 };
 
 postSchema.statics.list = function({ cursor, username, self }): Post[] {
-  const query = {};
+  const query = Object.assign(
+    {},
+    cursor ? { _id: { $lt: cursor } } : {},
+    username ? { username } : {}
+  );
 
-  return this.find(query)
+  const projection = self
+    ? {
+        count: 1,
+        username: 1,
+        content: 1,
+        comments: 1,
+        likes: {
+          $elemMatch: { $eq: self },
+        },
+        likesCount: 1,
+        createdAt: 1,
+      }
+    : {};
+
+  return this.find(query, projection)
     .sort({ _id: -1 }) // _id 역순
     .limit(20) // 20개로 제한
     .exec();
+};
+
+postSchema.statics.like = function({ _id, username }): Post {
+  return this.findByIdAndUpdate(
+    _id,
+    {
+      $inc: { likesCount: 1 },
+      $push: { likes: username },
+    },
+    { new: true, select: 'likesCount' }
+  ).exec();
+};
+
+postSchema.statics.unlike = function({ _id, username }): Post {
+  return this.findByIdAndUpdate(
+    _id,
+    {
+      $inc: { likesCount: -1 },
+      $pull: { likes: username },
+    },
+    { new: true, select: 'likesCount' }
+  ).exec();
 };
 
 export const Post: PostModel = model<Post, PostModel>('Post', postSchema);

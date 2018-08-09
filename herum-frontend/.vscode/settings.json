@@ -1,4 +1,5 @@
 {
-    "generate-react-component.componentTemplatePath": "/Users/killi8n/Documents/aboutVSCODE/react-sass-component-ts-template",
-
+  "generate-react-component.componentTemplatePath":
+    "/Users/killi8n/Documents/aboutVSCODE/react-sass-component-ts-template",
+  "editor.formatOnSave": true
 }

@@ -111,7 +111,7 @@ accountSchema.statics.findByEmail = function(email) {
 };
 
 accountSchema.statics.findByUsername = function(username) {
-  return this.findOne({ username }).exec();
+  return this.findOne({ 'profile.username': username }).exec();
 };
 
 accountSchema.statics.findByEmailOrUsername = function({ username, email }) {
