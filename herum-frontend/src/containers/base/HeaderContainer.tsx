@@ -8,7 +8,7 @@ import { withRouter } from 'react-router-dom';
 import Header from 'components/base/Header';
 import LoginButton from 'components/base/LoginButton';
 import UserThumbnail from 'components/base/UserThumbnail';
-import UserMenuContainer from 'containers/base/UserMenuContainer';
+import UserMenuContainer from './UserMenuContainer';
 
 export interface HeaderContainerProps {
   UserActions: typeof userActions;
